@@ -1,2 +1,2 @@
 brutus: brutus.cpp
-	g++ brutus.cpp -o brutus
+	g++ -std=c++11 brutus.cpp -o brutus
