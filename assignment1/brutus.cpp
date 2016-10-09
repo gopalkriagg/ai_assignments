@@ -21,6 +21,7 @@ repeat until OPEN.size != 0:
 #include <cstdlib>
 #include <ctime>
 #include <iterator>
+#include <vector>
 #include "declarations.h"
 #include "definitions.cpp"
 using namespace std;
@@ -35,34 +36,37 @@ int main() {
 
 
 void brutus(float ** distanceMatrix, int numCities) {
-	int * tour;
-	int * bestTourSoFar = new int[numCities];
+	vector<int> tour;
+	vector<int> bestTourSoFar;
 	float tourCost;
-	set<int *, compare> open;
-	set<int *, compare> closed;
+	set<vector<int>> open;
+	set<vector<int>> closed;
 	float minCostSoFar = numeric_limits<float>::max();
 	
 	tour = constructStartTour(numCities);
 	open.insert(tour);
-	while(open.size() != 0) { //Alterate termination conditions: (closed.size() != maxPermutations)
+	while(!open.empty()) { //Alterate termination conditions: (closed.size() != maxPermutations)
 		tour = *open.begin(); //Instead of first element any other random element could have been chosen too.
 		
 		tourCost = computeTourCost(tour, distanceMatrix, numCities);
 		if(tourCost < minCostSoFar) {
 			minCostSoFar = tourCost;
-			copy(tour, bestTourSoFar, numCities);
+			bestTourSoFar = tour;
 		}
-		
+		//cout << "Before erasing: " << open.size() << endl;
 		open.erase(tour);
+		//cout << "After erasing: " << open.size() << endl;
 		closed.insert(tour);
 		
-		set<int *, compare> neighbours = moveGen(tour, numCities);
+		set<vector<int>> neighbours = moveGen(tour, numCities);
 
 
 		set_difference(neighbours.begin(), neighbours.end(), closed.begin(), closed.end(), inserter(open, open.begin())); 
-		cout << endl;
-		printTour(bestTourSoFar, numCities);
-		//cout << minCostSoFar << endl;
+		//cout << endl;
+		//printTour(tour, numCities);
+		//cout << tourCost << endl;
+		cout << open.size() << endl;
+		//cout << closed.size() << endl;
 	}
 }
 
