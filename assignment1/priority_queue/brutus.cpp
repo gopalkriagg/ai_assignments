@@ -23,18 +23,10 @@ repeat until OPEN.size != 0:
 #include <iterator>
 #include <vector>
 #include <queue>
-#include <cmath>
 #include "declarations.h"
 #include "definitions.cpp"
 using namespace std;
 
-
-bool choose(float probability) {
-	float r = ((double) rand() / (RAND_MAX));
-	if(r <= probability)
-		return true;
-	else return false;
-}
 
 int main() {
 	srand(time(NULL));
@@ -45,24 +37,23 @@ int main() {
 
 
 void brutus(float ** distanceMatrix, int numCities) {
-	Tour tour = constructStartTour(numCities, distanceMatrix);
-	Tour bestTourSoFar = tour;
-	Tour newTour;
-	float deltaE;
-	float probability;
-	for(float T = 1000; T > 0 ; T -= 0.001) { //T denotes temperature
-		do {
-			newTour = moveGen(tour, distanceMatrix);
-			deltaE = newTour.cost - tour.cost;
-			probability = 1.0/(1.0 + exp(deltaE/T));
-			//cout << "P: " << probability << endl;
-		}while(!choose(probability));
+	Tour tour;
+	priority_queue<Tour, vector<Tour>, compar> open;
+	
+	tour = constructStartTour(numCities, distanceMatrix);
+	open.push(tour);
+	while(true) { 
+		tour = open.top(); //Instead of first element any other random element could have been chosen too.
 		
-		tour = newTour;
-		if(tour.cost < bestTourSoFar.cost) {
-			bestTourSoFar = tour;
-			bestTourSoFar.printTourCost();
-		} 
-	}
+		open.push(moveGen(tour, distanceMatrix));
+ 		
+ 		tour = open.top();
+ 		tour.printTourCost();
+ 		
+ 		open.pop();open.pop();
+ 		open.push(tour);
+
+ 		//cout << open.size();    
+	} 
 }
 

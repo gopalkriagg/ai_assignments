@@ -107,7 +107,7 @@ void inputData(int & numCities, float ** & distanceMatrix) {
 	//Allocate memory for distanceMatrix
 	distanceMatrix = new float*[numCities];
 	for(int i = 0; i < numCities; i++) 
-		distanceMatrix[i] = new float[numCities];
+		distanceMatrix[i] = new float[100];
 
 	inputDistanceMatrix(distanceMatrix, numCities);
 }
